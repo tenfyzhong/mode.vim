@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/tenfyzhong/mode.vim.svg?branch=master)](https://travis-ci.org/tenfyzhong/mode.vim)
 [![GitHub tag](https://img.shields.io/github/tag/tenfyzhong/mode.vim.svg)](https://github.com/tenfyzhong/mode.vim/tags)
 ![Vim Version](https://img.shields.io/badge/support-Vim%207.4%E2%86%91or%20NVIM-yellowgreen.svg?style=flat)
-[![doc](https://img.shields.io/badge/doc-%3Ah%20mode-yellow.svg?style=flat)](https://github.com/tenfyzhong/mode.vim/blob/develop/doc/mode.txt)
+[![doc](https://img.shields.io/badge/doc-%3Ah%20mode.vim-yellow.svg?style=flat)](https://github.com/tenfyzhong/mode.vim/blob/develop/doc/mode.txt)
 
 mode.vim is a plugin to extend the vim mode. It can add new mode easily. A new
 mode is a set of key mappings. It will store the mapping normally before enter
