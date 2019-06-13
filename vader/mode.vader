@@ -1,0 +1,61 @@
+Before:
+  call mode#del('example')
+
+After:
+  call mode#del('example')
+
+Execute (mode#add name is empty):
+  AssertEqual 1, mode#add('', '', [])
+
+Execute (mode#add mappings is empty):
+  AssertEqual 1, mode#add('example', 'E', [])
+
+Execute (mode#add success):
+  let mapping = mode#mapping#create('n', 1, 0, '<leader>h', ':echo "hello"<br>')
+  AssertEqual 0, mode#add('example', 'E', [mapping])
+
+Execute (mode#add name existed):
+  let mapping = mode#mapping#create('n', 1, 0, '<leader>h', ':echo "hello"<br>')
+  AssertEqual 0, mode#add('example', 'E', [mapping])
+  AssertEqual 2, mode#add('example', 'E', [mapping])
+
+Execute (mode#del):
+  let mapping = mode#mapping#create('n', 1, 0, '<leader>h', ':echo "hello"<br>')
+  AssertEqual 0, mode#add('example', 'E', [mapping])
+  call mode#del('example')
+  AssertEqual 0, mode#add('example', 'E', [mapping])
+
+Execute (mode#enable 1):
+  AssertEqual 1, mode#enable('')
+
+Execute (mode#enable 2):
+  AssertEqual 2, mode#enable('example')
+
+Execute (mode#enable):
+  let mapping = mode#mapping#create('n', 1, 0, 'hh', ':echo "hello"<br>')
+  AssertEqual 0, mode#add('example', 'E', [mapping])
+  AssertEqual 0, mode#enable('example')
+  let mapping = maparg('hh', 'n', 0, 1)
+  AssertEqual 1, mapping['noremap']
+  AssertEqual 'hh', mapping['lhs']
+  AssertEqual ':echo "hello"<br>', mapping['rhs']
+
+
+Execute (mode#disable 1):
+  AssertEqual 1, mode#disable('')
+
+
+Execute (mode#disable 2):
+  AssertEqual 2, mode#disable('example')
+
+
+Execute (mode#disable):
+  nnoremap hh :echo "old"<br>
+  let old = maparg('hh', 'n', 0)
+  let mapping = mode#mapping#create('n', 1, 0, 'hh', ':echo "hello"<br>')
+  AssertEqual 0, mode#add('example', 'E', [mapping])
+  AssertEqual 0, mode#enable('example')
+  AssertEqual 0, mode#disable('example')
+  let old2 = maparg('hh', 'n', 0)
+  AssertEqual old, old2
+  nunmap hh

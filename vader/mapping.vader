@@ -1,0 +1,42 @@
+Execute (create 1):
+  let mapping = mode#mapping#create('n', 1, 0, 'hh', ':echo "hello"<br>')
+  AssertEqual 'n', mapping['mode']
+  AssertEqual 1, mapping['noremap']
+  AssertEqual 0, mapping['buffer']
+  AssertEqual 'hh', mapping['lhs']
+  AssertEqual ':echo "hello"<br>', mapping['rhs']
+
+Execute (create 2):
+  let mapping = mode#mapping#create('n', 1, 0, 'hh', ':echo "hello"<br>', '<nowait>', '<silent>')
+  AssertEqual 'n', mapping['mode']
+  AssertEqual 1, mapping['noremap']
+  AssertEqual 0, mapping['buffer']
+  AssertEqual 'hh', mapping['lhs']
+  AssertEqual ':echo "hello"<br>', mapping['rhs']
+  AssertEqual ['<nowait>', '<silent>'], mapping['arguments']
+
+
+Execute (map_cmd 1):
+  let mapping = mode#mapping#create('n', 1, 0, 'hh', ':echo "hello"<br>')
+  let cmd = mode#mapping#map_cmd(mapping)
+  AssertEqual 'nnoremap hh :echo "hello"<br>', cmd
+
+Execute (map_cmd 2):
+  let mapping = mode#mapping#create('n', 1, 1, 'hh', ':echo "hello"<br>', '<nowait>', '<silent>')
+  let cmd = mode#mapping#map_cmd(mapping)
+  AssertEqual 'nnoremap <buffer> <nowait> <silent> hh :echo "hello"<br>', cmd
+
+Execute (map_cmd 3):
+  let mapping = mode#mapping#create('n', 0, 1, 'hh', ':echo "hello"<br>', '<nowait>', '<silent>')
+  let cmd = mode#mapping#map_cmd(mapping)
+  AssertEqual 'nmap <buffer> <nowait> <silent> hh :echo "hello"<br>', cmd
+
+Execute (unmap_cmd 1):
+  let mapping = mode#mapping#create('n', 1, 0, 'hh', ':echo "hello"<br>')
+  let cmd = mode#mapping#unmap_cmd(mapping)
+  AssertEqual 'nunmap hh', cmd
+
+Execute (unmap_cmd 2):
+  let mapping = mode#mapping#create('n', 0, 1, 'hh', ':echo "hello"<br>')
+  let cmd = mode#mapping#unmap_cmd(mapping)
+  AssertEqual 'nunmap <buffer> hh', cmd

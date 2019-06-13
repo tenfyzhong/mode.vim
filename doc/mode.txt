@@ -1,0 +1,116 @@
+*mode.vim* *mode.txt* author: tenfyzhong
+
+This help file explains the mode plugin.
+================================================================================
+Contents:
+0. Introduction -------------------------------------------- |mode-introduction|
+1. Install ------------------------------------------------- |mode-install|
+2. Usage --------------------------------------------------- |mode-usage|
+3. functions ----------------------------------------------- |mode-functions|
+4. example ------------------------------------------------- |mode-example|
+5. LICENSE ------------------------------------------------- |mode-LICENSE|
+================================================================================
+0. Introduction                                              *mode-introduction*
+mode.vim is a plugin to extend the vim mode. It can add new mode easily. A new
+mode is a set of key mappings. It will store the mapping normally before enter
+the new mode and restore the mappings after exits the new mode. mode.vim do
+this works very easily. 
+
+================================================================================
+1. Install                                                        *mode-install*
+I suggest you to use a plugin manager, such vim-plug or other.
+- [vim-plug](https://github.com/junegunn/vim-plug) >
+  Plug 'tenfyzhong/mode.vim' 
+<
+
+- Manual >
+  git clone https://github.com/tenfyzhong/mode.vim.git ~/.vim/bundle/mode.vim
+  echo 'set rtp+=~/.vim/bundle/mode.vim' >> ~/.vimrc
+  vim -c 'helptag ~/.vim/bundle/mode.vim/doc' -c qa!
+
+================================================================================
+2. Usage                                                            *mode-usage*
+It's very easy to create a new mode. Follow this steps:
+1. Create key mappings use |mode#mapping#create|.
+2. Add a new mode use |mode#add|.
+3. Enable the mode use |mode#enable|.
+4. Disable the mode use |mode#disable|.
+5. You can delete the mode use |mode#del|.
+
+================================================================================
+3. functions                                                    *mode-functions*
+                                                           *mode#mapping#create*
+3.1 mode#mapping#create({mode}, {noremap}, {buffer}, {lhs}, {rhs} [, {...}]) 
+Create a mapping object and return it. The object can be used by 
+|mode#mapping#map_cmd|, |mode#mapping#unmap_cmd|, |mode#add|. 
+
+{mode} can be one of these strings:
+			"n"	Normal
+			"v"	Visual (including Select)
+			"o"	Operator-pending
+			"i"	Insert
+			"c"	Cmd-line
+			"s"	Select
+			"x"	Visual
+			"l"	langmap |language-mapping|
+			"t"	Terminal-Job
+			""	Normal, Visual and Operator-pending
+
+The {noremap} set the mapping to noremap.
+
+The {buffer} set the mapping locally. See |map-<buffer>|.
+
+The {lhs} and {rhs} is the same of |map-commands|. 
+
+Ths {...} can be "<buffer>", "<nowait>", "<silent>", "<special>", "<script>", 
+"<expr>" and "<unique>". See |map-arguments|.
+
+                                                          *mode#mapping#map_cmd*
+3.2 mode#mapping#map_cmd({mapping})
+The {mapping} is a return value of |mode#mapping#create|, it will return a
+mapping command such `:nmap`
+
+                                                        *mode#mapping#unmap_cmd*
+3.3 mode#mapping#unmap_cmd(mapping)
+The {mapping} is a return value of |mode#mapping#create|, it will return a
+mapping command such `:nunmap`
+
+                                                                      *mode#add*
+3.4 mode#add(name, abbreviation, mappings)                            
+This function can add a new mode. You mush call this function to add the mode
+before enable it. The {name} is the name of the mode. It will be use by
+|mode#enable| and |mode#disable|. The {abbreviation} is the abbreviation of
+{name}, it will be showed in the airline if use it. The {mappings} is a list
+of mapping return by |mode#mapping#create|. It will return 0 if add success.
+
+                                                                      *mode#del*
+3.4 mode#del(name)                            
+This function will delete a mode added by |mode#add|
+
+                                                                   *mode#enable*
+3.5 mode#enable({name})                                                    
+This function will enable the mode named {name}, which was added by |mode#add|.
+It will store the old mappings and map the new mappings of mode {name}.
+
+                                                                  *mode#disable*
+3.6 mode#disable({name})                                                  
+This function will disable the mode named {name}, which wad enabled by
+|mode#enable|. It will unmap the mappings of mode {name} and restore the old
+mappings.
+
+================================================================================
+4. example                                                        *mode-example*
+This is an example to define a mode named example. >
+  let mappings = []
+  call add(mappings, mode#mapping#create('n', 1, 0, '<leader>h', ':echo hello<br>'))
+  call add(mappings, mode#mapping#create('n', 1, 0, '<leader>w', ':echo world<br>'))
+  call mode#add('example', 'E', mappings)
+  command! ExampleEnable mode#enable('example')
+  command! ExampleDisable mode#disable('example')
+<
+
+================================================================================
+5. LICENSE                                                        *mode-license*
+MIT License Copyright (c) 2019 tenfyzhong
+
+" vim:ft=help:iskeyword+=-:iskeyword+=58:iskeyword+=#
